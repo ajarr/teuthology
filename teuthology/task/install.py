@@ -963,8 +963,17 @@ def upgrade_common(ctx, config, deploy_style):
             # FIXME: again, make extra_pkgs distro-agnostic
         pkgs += extra_pkgs
 
+        installed_version = packaging.get_package_version(remote, 'ceph-common')
+        upgrade_version = _get_gitbuilder_project(ctx, remote, node).version
+        log.info("Ceph {s} upgrade from {i} to {u}".format(
+	    s=system_type,
+	    i=installed_version,
+	    u=upgrade_version
+	))
+
         deploy_style(ctx, node, remote, pkgs, system_type)
         verify_package_version(ctx, node, remote)
+
     return len(remotes)
 
 docstring_for_upgrade = """"
